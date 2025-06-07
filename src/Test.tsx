@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+
 (window as any).global ||= window;
 
-
+const CHAT_IDS = [100, 200];
 
 const Test = () => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<String[]>([]);
+  const [input, setInput] = useState<Record<number, string>>({}); // one input per chat
+  const [messages, setMessages] = useState<Record<number, string[]>>({}); // one message list per chat
 
   useEffect(() => {
     const socket = new SockJS('http://localhost:8080/stomp-ws');
@@ -17,11 +18,13 @@ const Test = () => {
       onConnect: () => {
         console.log('Connected to WebSocket');
 
-        // Subscribe to /chat
-        client.subscribe('/chat/messages', (message) => {
-         
-        //   const msg = JSON.parse(message.body);
-          setMessages((prev) => [...prev, message.body]);
+        CHAT_IDS.forEach(chatId => {
+          client.subscribe(`/chat/${chatId}/messages`, (message) => {
+            setMessages(prev => ({
+              ...prev,
+              [chatId]: [...(prev[chatId] || []), message.body]
+            }));
+          });
         });
       },
       debug: str => console.log(str)
@@ -35,32 +38,38 @@ const Test = () => {
     };
   }, []);
 
-  const sendMessage = () => {
-    if (stompClient && input.trim()) {
-      
+  const sendMessage = (chatId: number) => {
+    const message = input[chatId];
+    if (stompClient && message?.trim()) {
       stompClient.publish({
-        destination: '/server/message', // Send to /server
-        body: JSON.stringify(input)
+        destination: `/server/${chatId}/message/send`, // dynamic send path
+        body: JSON.stringify(message)
       });
-      setInput('');
+      setInput(prev => ({ ...prev, [chatId]: '' }));
     }
   };
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>WebSocket Chat</h3>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Type a message..."
-      />
-      <button onClick={sendMessage}>Send</button>
-      <ul>
-        {messages.map((msg, idx) => (
-          <li key={idx}><strong></strong> {msg}</li>
-        ))}
-      </ul>
+      {CHAT_IDS.map(chatId => (
+        <div key={chatId} style={{ marginBottom: '40px' }}>
+          <h3>WebSocket Chat #{chatId}</h3>
+          <input
+            type="text"
+            value={input[chatId] || ''}
+            onChange={(e) =>
+              setInput(prev => ({ ...prev, [chatId]: e.target.value }))
+            }
+            placeholder={`Message for chat ${chatId}`}
+          />
+          <button onClick={() => sendMessage(chatId)}>Send</button>
+          <ul>
+            {(messages[chatId] || []).map((msg, idx) => (
+              <li key={idx}>{msg}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 };
