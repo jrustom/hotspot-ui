@@ -5,7 +5,7 @@ import { Client } from '@stomp/stompjs';
 (window as any).global ||= window;
 
 const CHAT_IDS = [100, 200];
-const socketURL = import.meta.env.VITE_WS_SOCKJS_URL;
+const socketURL = import.meta.env.VITE_WS_STOMPJS_URL;
 const clientURL = import.meta.env.VITE_WS_CLIENT_URL;
 const serverURL = import.meta.env.VITE_WS_SERVER_URL;
 
