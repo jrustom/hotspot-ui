@@ -5,6 +5,9 @@ import { Client } from '@stomp/stompjs';
 (window as any).global ||= window;
 
 const CHAT_IDS = [100, 200];
+const socketURL = import.meta.env.VITE_WS_SOCKJS_URL;
+const clientURL = import.meta.env.VITE_WS_CLIENT_URL;
+const serverURL = import.meta.env.VITE_WS_SERVER_URL;
 
 const Test = () => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -12,14 +15,14 @@ const Test = () => {
   const [messages, setMessages] = useState<Record<number, string[]>>({}); // one message list per chat
 
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/stomp-ws');
+    const socket = new SockJS(socketURL);
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
         console.log('Connected to WebSocket');
 
         CHAT_IDS.forEach(chatId => {
-          client.subscribe(`/chat/${chatId}/messages`, (message) => {
+          client.subscribe(`/chat/${chatId}/${clientURL}`, (message) => {
             setMessages(prev => ({
               ...prev,
               [chatId]: [...(prev[chatId] || []), message.body]
@@ -42,7 +45,7 @@ const Test = () => {
     const message = input[chatId];
     if (stompClient && message?.trim()) {
       stompClient.publish({
-        destination: `/server/${chatId}/message/send`, // dynamic send path
+        destination: `/server/${chatId}/${serverURL}`, // dynamic send path
         body: JSON.stringify(message)
       });
       setInput(prev => ({ ...prev, [chatId]: '' }));
