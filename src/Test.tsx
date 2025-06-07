@@ -6,8 +6,10 @@ import { Client } from '@stomp/stompjs';
 
 const CHAT_IDS = [100, 200];
 const socketURL = import.meta.env.VITE_WS_STOMPJS_URL;
+
+const clientPrefix = import.meta.env.VITE_WS_CLIENT_PREFIX;
 const clientURL = import.meta.env.VITE_WS_CLIENT_URL;
-const serverURL = import.meta.env.VITE_WS_SERVER_URL;
+const serverPrefix = import.meta.env.VITE_WS_SERVER_PREFIX;
 
 const Test = () => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -22,7 +24,7 @@ const Test = () => {
         console.log('Connected to WebSocket');
 
         CHAT_IDS.forEach(chatId => {
-          client.subscribe(`/chat/${chatId}/${clientURL}`, (message) => {
+          client.subscribe(`${clientPrefix}/${chatId}/${clientURL}`, (message) => {
             setMessages(prev => ({
               ...prev,
               [chatId]: [...(prev[chatId] || []), message.body]
@@ -45,7 +47,7 @@ const Test = () => {
     const message = input[chatId];
     if (stompClient && message?.trim()) {
       stompClient.publish({
-        destination: `/server/${chatId}/${serverURL}`, // dynamic send path
+        destination: `${serverPrefix}/${chatId}/message/send`, // dynamic send path
         body: JSON.stringify(message)
       });
       setInput(prev => ({ ...prev, [chatId]: '' }));
