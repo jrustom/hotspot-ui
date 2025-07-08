@@ -1,13 +1,13 @@
-import './App.css'
-import Test from './Test'
+import "./App.css";
+import AccountRegistration from "./components/accountRegistration";
 
 function App() {
-
   return (
     <>
-     <Test /> 
+      {/* <Test />  */}
+      <AccountRegistration />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
