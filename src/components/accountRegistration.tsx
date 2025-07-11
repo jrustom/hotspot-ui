@@ -20,8 +20,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleLogin, handleSignUp } from "@/services/accountService";
 import { useState } from "react";
+import { useAuth, User } from "@/contexts/AuthContext";
 
-export function Login({ changeToSignUp }: { changeToSignUp: () => void }) {
+export function Login({
+  changeToSignUp,
+  setUserData,
+}: {
+  changeToSignUp: () => void;
+  setUserData: (user: User) => void;
+}) {
   const loginFormSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address." }),
     password: z
@@ -41,7 +48,7 @@ export function Login({ changeToSignUp }: { changeToSignUp: () => void }) {
 
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
     try {
-      handleLogin(values.email, values.password);
+      handleLogin(setUserData, values.email, values.password);
     } catch (error) {}
   }
 
@@ -95,7 +102,10 @@ export function Login({ changeToSignUp }: { changeToSignUp: () => void }) {
           </CardContent>
           <CardFooter className="text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <a onClick={changeToSignUp} className="ml-1 underline cursor-pointer">
+            <a
+              onClick={changeToSignUp}
+              className="ml-1 underline cursor-pointer"
+            >
               Sign Up
             </a>
           </CardFooter>
@@ -105,7 +115,13 @@ export function Login({ changeToSignUp }: { changeToSignUp: () => void }) {
   );
 }
 
-export function SignUp({ changeToLogin }: { changeToLogin: () => void }) {
+export function SignUp({
+  changeToLogin,
+  setUserData,
+}: {
+  changeToLogin: () => void;
+  setUserData: (user: User) => void;
+}) {
   const signUpFormSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
@@ -130,6 +146,7 @@ export function SignUp({ changeToLogin }: { changeToLogin: () => void }) {
   function onSubmit(values: z.infer<typeof signUpFormSchema>) {
     try {
       handleSignUp(
+        setUserData,
         values.firstName + " " + values.lastName,
         values.email,
         values.password
@@ -215,7 +232,10 @@ export function SignUp({ changeToLogin }: { changeToLogin: () => void }) {
           </CardContent>
           <CardFooter className="text-sm text-muted-foreground">
             Already have an account?{" "}
-            <a onClick={changeToLogin} className="ml-1 underline cursor-pointer">
+            <a
+              onClick={changeToLogin}
+              className="ml-1 underline cursor-pointer"
+            >
               Login
             </a>
           </CardFooter>
@@ -227,11 +247,18 @@ export function SignUp({ changeToLogin }: { changeToLogin: () => void }) {
 
 function AccountRegistration() {
   const [loggingIn, setLoggingIn] = useState<boolean>(true);
+  const { setUserData } = useAuth();
 
   return loggingIn ? (
-    <Login changeToSignUp={() => setLoggingIn(false)} />
+    <Login
+      changeToSignUp={() => setLoggingIn(false)}
+      setUserData={setUserData}
+    />
   ) : (
-    <SignUp changeToLogin={() => setLoggingIn(true)} />
+    <SignUp
+      changeToLogin={() => setLoggingIn(true)}
+      setUserData={setUserData}
+    />
   );
 }
 

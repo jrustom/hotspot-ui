@@ -1,11 +1,11 @@
-type UserResponseDto = {
-  id: string;
-  name: string;
-  email: string;
-};
+import { User } from "@/contexts/AuthContext";
 
-
-export async function handleSignUp(name: string, email: string, password: string) {
+export async function handleSignUp(
+  setUserData: (user: User) => void,
+  name: string,
+  email: string,
+  password: string
+) {
   try {
     const response = await fetch("http://localhost:8080/users", {
       method: "POST",
@@ -20,17 +20,20 @@ export async function handleSignUp(name: string, email: string, password: string
       console.log(error);
     }
 
-    const userResponse: UserResponseDto = await response.json();
+    const userResponse: User = await response.json();
 
-    console.log(userResponse.id);
-    console.log(userResponse.name);
-    console.log(userResponse.email);
+    // Save user info in context
+    setUserData(userResponse);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function handleLogin(email: string, password: string) {
+export async function handleLogin(
+  setUserData: (user: User) => void,
+  email: string,
+  password: string
+) {
   try {
     const response = await fetch("http://localhost:8080/users/login", {
       method: "POST",
@@ -45,11 +48,9 @@ export async function handleLogin(email: string, password: string) {
       console.log(error);
     }
 
-    const userResponse: UserResponseDto = await response.json();
+    const userResponse: User = await response.json();
 
-    console.log(userResponse.id);
-    console.log(userResponse.name);
-    console.log(userResponse.email);
+    setUserData(userResponse);
   } catch (error) {
     console.log(error);
   }
