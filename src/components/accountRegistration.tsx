@@ -31,10 +31,7 @@ export function Login({
 }) {
   const loginFormSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address." }),
-    password: z
-      .string()
-      .min(6, "The password must be at least 6 characters long")
-      .regex(/[^a-zA-Z0-9]/, "The password must contain at least one symbol"),
+    password: z.string().nonempty({ message: "Please enter your password." }),
   });
 
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
@@ -48,8 +45,14 @@ export function Login({
 
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
     try {
-      handleLogin(setUserData, values.email, values.password);
-    } catch (error) {}
+      handleLogin(setUserData, values.email, values.password).then((error) => {
+        if (error) {
+          loginForm.setError("root", { message: error.message });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -65,7 +68,7 @@ export function Login({
                 control={loginForm.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-5">
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="johndoe@email.com" {...field} />
@@ -78,7 +81,7 @@ export function Login({
                 control={loginForm.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem className="mb-5">
+                  <FormItem className="">
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="" {...field} />
@@ -95,7 +98,13 @@ export function Login({
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+
+              {loginForm.formState.errors.root && (
+                <p className="text-sm text-red-500">
+                  {loginForm.formState.errors.root.message}
+                </p>
+              )}
+              <Button type="submit" className="mt-5 w-full">
                 Login
               </Button>
             </form>
@@ -150,7 +159,11 @@ export function SignUp({
         values.firstName + " " + values.lastName,
         values.email,
         values.password
-      );
+      ).then((error) => {
+        if (error) {
+          signUpForm.setError("root", { message: error.message });
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -169,7 +182,7 @@ export function SignUp({
                 control={signUpForm.control}
                 name="firstName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-5">
                     <FormLabel>First name</FormLabel>
                     <FormControl>
                       <Input placeholder="John" {...field} />
@@ -182,7 +195,7 @@ export function SignUp({
                 control={signUpForm.control}
                 name="lastName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-5">
                     <FormLabel>Last name</FormLabel>
                     <FormControl>
                       <Input placeholder="Doe" {...field} />
@@ -195,7 +208,7 @@ export function SignUp({
                 control={signUpForm.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-5">
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="johndoe@email.com" {...field} />
@@ -208,7 +221,7 @@ export function SignUp({
                 control={signUpForm.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem className="mb-5">
+                  <FormItem className="">
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="" {...field} />
@@ -225,7 +238,13 @@ export function SignUp({
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+
+              {signUpForm.formState.errors.root && (
+                <p className="text-sm text-red-500">
+                  {signUpForm.formState.errors.root.message}
+                </p>
+              )}
+              <Button type="submit" className="mt-5 w-full">
                 Sign up
               </Button>
             </form>
