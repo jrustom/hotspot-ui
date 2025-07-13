@@ -23,8 +23,10 @@ import { useState } from "react";
 import { useAuth, User } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuItem } from "./ui/dropdown-menu";
 
 export function Login({
   changeToSignUp,
@@ -142,7 +144,7 @@ export function SignUp({
   const signUpFormSchema = z.object({
     username: z
       .string()
-      .email({ message: "Please enter a valid email address." }),
+      .nonempty({ message: "Please enter a valid email address." }),
     password: z
       .string()
       .min(6, "The password must be at least 6 characters long")
@@ -246,8 +248,45 @@ export function SignUp({
                       <FormControl>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button className="!bg-gray-500 !text-6xl aspect-square !p-8 !rounded-full">?</Button>
+                            <div>
+                              {field.value ? (
+                                <img
+                                  src={`/src/assets/avatars/${field.value}.svg`}
+                                  alt={field.value}
+                                  className="size-15 md:size-20"
+                                />
+                              ) : (
+                                <div className="!bg-gray-500 flex justify-center items-center !text-5xl md:!text-7xl !rounded-full size-15 md:size-20">
+                                  ?
+                                </div>
+                              )}
+                            </div>
                           </DropdownMenuTrigger>
+                          <DropdownMenuContent className="p-4 bg-gray-500 rounded-sm m-4">
+                            <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                              {[
+                                "girl1",
+                                "girl2",
+                                "girl3",
+                                "girl4",
+                                "girl5",
+                                "guy1",
+                                "guy2",
+                                "guy3",
+                                "guy4",
+                                "guy5",
+                              ].map((pic, i) => (
+                                <DropdownMenuItem key={i}>
+                                  <img
+                                    src={`/src/assets/avatars/${pic}.svg`}
+                                    alt={pic}
+                                    onClick={() => field.onChange(pic)}
+                                    className="flex aspect-square w-15 md:w-20 cursor-pointer"
+                                  />
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
+                          </DropdownMenuContent>
                         </DropdownMenu>
                       </FormControl>
                     </div>
