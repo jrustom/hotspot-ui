@@ -246,7 +246,7 @@ export function SignUp({
                                   className="size-15 md:size-20"
                                 />
                               ) : (
-                                <div className="!bg-gray-500 flex justify-center items-center !text-5xl md:!text-7xl !rounded-full size-15 md:size-20">
+                                <div className="!bg-gray-400 flex justify-center items-center !text-5xl md:!text-7xl !rounded-full size-15 md:size-20">
                                   ?
                                 </div>
                               )}
@@ -271,7 +271,7 @@ export function SignUp({
                                     src={`/src/assets/avatars/${pic}.svg`}
                                     alt={pic}
                                     onClick={() => field.onChange(pic)}
-                                    className="flex aspect-square w-15 md:w-20 cursor-pointer"
+                                    className="flex aspect-square size-15 md:size-20 cursor-pointer"
                                   />
                                 </DropdownMenuItem>
                               ))}
