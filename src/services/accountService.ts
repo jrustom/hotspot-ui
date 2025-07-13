@@ -6,9 +6,9 @@ interface HotspotError {
 
 export async function handleSignUp(
   setUserData: (user: User) => void,
-  name: string,
-  email: string,
-  password: string
+  username: string,
+  password: string,
+  profilePicture: string
 ): Promise<void | HotspotError> {
   try {
     const response = await fetch("http://localhost:8080/users", {
@@ -16,7 +16,7 @@ export async function handleSignUp(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ username, password, profilePicture }),
     });
 
     if (!response.ok) {
@@ -38,7 +38,7 @@ export async function handleSignUp(
 
 export async function handleLogin(
   setUserData: (user: User) => void,
-  email: string,
+  username: string,
   password: string
 ): Promise<void | HotspotError> {
   try {
@@ -47,7 +47,7 @@ export async function handleLogin(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
 
     if (!response.ok) {

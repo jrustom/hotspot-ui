@@ -21,6 +21,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { handleLogin, handleSignUp } from "@/services/accountService";
 import { useState } from "react";
 import { useAuth, User } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 
 export function Login({
   changeToSignUp,
@@ -30,14 +34,16 @@ export function Login({
   setUserData: (user: User) => void;
 }) {
   const loginFormSchema = z.object({
-    email: z.string().email({ message: "Please enter a valid email address." }),
+    username: z
+      .string()
+      .nonempty({ message: "Please enter a valid email address." }),
     password: z.string().nonempty({ message: "Please enter your password." }),
   });
 
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
     criteriaMode: "all",
@@ -45,11 +51,13 @@ export function Login({
 
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
     try {
-      handleLogin(setUserData, values.email, values.password).then((error) => {
-        if (error) {
-          loginForm.setError("root", { message: error.message });
+      handleLogin(setUserData, values.username, values.password).then(
+        (error) => {
+          if (error) {
+            loginForm.setError("root", { message: error.message });
+          }
         }
-      });
+      );
     } catch (error) {
       console.log(error);
     }
@@ -66,12 +74,12 @@ export function Login({
             <form onSubmit={loginForm.handleSubmit(onSubmit)}>
               <FormField
                 control={loginForm.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem className="mb-5">
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="johndoe@email.com" {...field} />
+                      <Input placeholder="" {...field} />
                     </FormControl>
                     <FormMessage className="ml-2 mb-3" />
                   </FormItem>
@@ -132,22 +140,38 @@ export function SignUp({
   setUserData: (user: User) => void;
 }) {
   const signUpFormSchema = z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string().email({ message: "Please enter a valid email address." }),
+    username: z
+      .string()
+      .email({ message: "Please enter a valid email address." }),
     password: z
       .string()
       .min(6, "The password must be at least 6 characters long")
       .regex(/[^a-zA-Z0-9]/, "The password must contain at least one symbol"),
+    profilePicture: z.enum(
+      [
+        "girl1",
+        "girl2",
+        "girl3",
+        "girl4",
+        "girl5",
+        "guy1",
+        "guy2",
+        "guy3",
+        "guy4",
+        "guy5",
+      ],
+      {
+        message: "Please enter a valid profile picture",
+      }
+    ),
   });
 
   const signUpForm = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      username: "",
       password: "",
+      profilePicture: undefined,
     },
     criteriaMode: "all",
   });
@@ -156,9 +180,9 @@ export function SignUp({
     try {
       handleSignUp(
         setUserData,
-        values.firstName + " " + values.lastName,
-        values.email,
-        values.password
+        values.username,
+        values.password,
+        values.profilePicture
       ).then((error) => {
         if (error) {
           signUpForm.setError("root", { message: error.message });
@@ -180,38 +204,12 @@ export function SignUp({
             <form onSubmit={signUpForm.handleSubmit(onSubmit)}>
               <FormField
                 control={signUpForm.control}
-                name="firstName"
+                name="username"
                 render={({ field }) => (
                   <FormItem className="mb-5">
-                    <FormLabel>First name</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="John" {...field} />
-                    </FormControl>
-                    <FormMessage className="ml-2 mb-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={signUpForm.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem className="mb-5">
-                    <FormLabel>Last name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Doe" {...field} />
-                    </FormControl>
-                    <FormMessage className="ml-2 mb-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={signUpForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="mb-5">
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="johndoe@email.com" {...field} />
+                      <Input placeholder="" {...field} />
                     </FormControl>
                     <FormMessage className="ml-2 mb-3" />
                   </FormItem>
@@ -221,7 +219,7 @@ export function SignUp({
                 control={signUpForm.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem className="">
+                  <FormItem className="mb-5">
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="" {...field} />
@@ -235,6 +233,24 @@ export function SignUp({
                           {msg}
                         </p>
                       ))}
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={signUpForm.control}
+                name="profilePicture"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Profile Picture</FormLabel>
+                    <div className="flex justify-center">
+                      <FormControl>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button className="!bg-gray-500 !text-6xl aspect-square !p-8 !rounded-full">?</Button>
+                          </DropdownMenuTrigger>
+                        </DropdownMenu>
+                      </FormControl>
+                    </div>
                   </FormItem>
                 )}
               />
