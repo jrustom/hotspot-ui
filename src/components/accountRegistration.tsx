@@ -83,7 +83,7 @@ export function Login({
                     <FormControl>
                       <Input placeholder="" {...field} />
                     </FormControl>
-                    <FormMessage className="ml-2 mb-3" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -96,15 +96,7 @@ export function Login({
                     <FormControl>
                       <Input type="password" placeholder="" {...field} />
                     </FormControl>
-
-                    {loginForm.formState.errors.password?.types &&
-                      Object.values(
-                        loginForm.formState.errors.password.types
-                      ).map((msg, i) => (
-                        <p key={i} className="text-sm text-red-500">
-                          {msg}
-                        </p>
-                      ))}
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -142,13 +134,11 @@ export function SignUp({
   setUserData: (user: User) => void;
 }) {
   const signUpFormSchema = z.object({
-    username: z
-      .string()
-      .nonempty({ message: "Please enter a valid email address." }),
+    username: z.string().nonempty("Please enter a valid email address."),
     password: z
       .string()
-      .min(6, "The password must be at least 6 characters long")
-      .regex(/[^a-zA-Z0-9]/, "The password must contain at least one symbol"),
+      .min(6, "The password must be at least 6 characters long.")
+      .regex(/[^a-zA-Z0-9]/, "The password must contain at least one symbol."),
     profilePicture: z.enum(
       [
         "girl1",
@@ -163,7 +153,7 @@ export function SignUp({
         "guy5",
       ],
       {
-        message: "Please enter a valid profile picture",
+        message: "Please select a profile picture.",
       }
     ),
   });
@@ -213,7 +203,7 @@ export function SignUp({
                     <FormControl>
                       <Input placeholder="" {...field} />
                     </FormControl>
-                    <FormMessage className="ml-2 mb-3" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -290,6 +280,7 @@ export function SignUp({
                         </DropdownMenu>
                       </FormControl>
                     </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
