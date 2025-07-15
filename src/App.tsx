@@ -6,23 +6,23 @@ import { useAuth } from "./contexts/AuthContext";
 
 function App() {
   const { userData } = useAuth();
-  const [showRegistration, setShowRegistration] = useState<boolean>(true);
+  const [registered, setRegistered] = useState<boolean>(true);
 
   useEffect(() => {
-    if (userData != null) setShowRegistration(false);
+    if (userData != null) setRegistered(true);
   }, [userData]);
 
   return (
     <>
       <div
         className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-1 ${
-          showRegistration ? "" : "hidden"
+          registered ? "hidden" : ""
         }`}
       >
         <AccountRegistration />
       </div>
       <div className="flex-1">
-        <MainComponent />
+        <MainComponent registered={registered} />
       </div>
     </>
   );
