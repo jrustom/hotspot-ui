@@ -10,7 +10,7 @@ function NewHotspot({ setStatus, mapRef }: { setStatus: (value: boolean) => void
       generateNewHotspot(mapRef.current?.getCenter()).then((error) => {
         if (error) {
           // toast the error instead
-          toast(error.message);
+          toast.error(error.message);
           // console.log(error);
         }
       }
