@@ -1,73 +1,73 @@
 import { User } from "@/contexts/AuthContext";
 
-interface HotspotError {
-  message: string;
+export interface HotspotError {
+	message: string;
 }
 
 export async function handleSignUp(
-  setUserData: (user: User) => void,
-  username: string,
-  password: string,
-  profilePicture: string
+	setUserData: (user: User) => void,
+	username: string,
+	password: string,
+	profilePicture: string
 ): Promise<void | HotspotError> {
-  try {
-    const response = await fetch("http://localhost:8080/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password, profilePicture }),
-    });
+	try {
+		const response = await fetch("http://localhost:8080/users", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ username, password, profilePicture }),
+		});
 
-    if (!response.ok) {
-      const error = await response.json();
-      return error;
-    }
+		if (!response.ok) {
+			const error = await response.json();
+			return error;
+		}
 
-    const userResponse: User = await response.json();
+		const userResponse: User = await response.json();
 
-    // Save user info in context
-    setUserData(userResponse);
-  } catch (error) {
-    return {
-      message:
-        "An error occurred while trying to sign up, please try again later.",
-    };
-  }
+		// Save user info in context
+		setUserData(userResponse);
+	} catch (error) {
+		return {
+			message:
+				"An error occurred while trying to sign up, please try again later.",
+		};
+	}
 }
 
 export async function handleLogin(
-  setUserData: (user: User) => void,
-  username: string,
-  password: string
+	setUserData: (user: User) => void,
+	username: string,
+	password: string
 ): Promise<void | HotspotError> {
-  try {
-    const response = await fetch("http://localhost:8080/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+	try {
+		const response = await fetch("http://localhost:8080/users/login", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ username, password }),
+		});
 
-    if (!response.ok) {
-      const error = await response.json();
-      return error;
-    }
+		if (!response.ok) {
+			const error = await response.json();
+			return error;
+		}
 
-    const userResponse: User = await response.json();
+		const userResponse: User = await response.json();
 
-    setUserData(userResponse);
-  } catch (error) {
-    return {
-      message:
-        "An error occurred while trying to login, please try again later.",
-    };
-    // return {
-    //   message:
-    //     error instanceof Error
-    //       ? error.message
-    //       : "An error occurred while trying to login, please try again later.",
-    // };
-  }
+		setUserData(userResponse);
+	} catch (error) {
+		return {
+			message:
+				"An error occurred while trying to login, please try again later.",
+		};
+		// return {
+		//   message:
+		//     error instanceof Error
+		//       ? error.message
+		//       : "An error occurred while trying to login, please try again later.",
+		// };
+	}
 }

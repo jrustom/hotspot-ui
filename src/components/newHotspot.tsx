@@ -1,40 +1,44 @@
 import { generateNewHotspot } from '@/services/hotspotService';
 import { Button } from './ui/button';
 import { RefObject } from 'react';
+import { toast } from 'sonner';
 
 function NewHotspot({ setStatus, mapRef }: { setStatus: (value: boolean) => void, mapRef: RefObject<mapboxgl.Map | null> }) {
 
-	const handleClick = () => {
-		try {
-			generateNewHotspot(mapRef.current?.getCenter()).then((error) => {
-				if (error) {
-					console.log(error);
-				}
-			})
-		} catch (error) {
-			console.log(error);
-		}
+  const handleClick = () => {
+    try {
+      generateNewHotspot(mapRef.current?.getCenter()).then((error) => {
+        if (error) {
+          // toast the error instead
+          toast(error.message);
+          // console.log(error);
+        }
+      }
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
 
-		setStatus(false);
-		// console.log(mapRef.current?.getCenter());
-	}
+    setStatus(false);
+    // console.log(mapRef.current?.getCenter());
+  }
 
 
 
-	return <>
-		<div
-			className="aspect-square w-8 h-8 z-10 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 border-white shadow-lg flex items-center justify-center pointer-events-none"
-			style={{
-				background: "transparent",
-				boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-				outline: "2px solid black",
-			}}
-		>
-			<div className="w-3 h-3 rounded-full bg-transparent border-2 border-white"></div>
-		</div>
-		<Button variant="outline" className="z-50 absolute bottom-10 left-1/2 -translate-x-1/2 border border-black" onClick={handleClick}>Confirm</Button>
-	</>;
+  return <>
+    <div
+      className="aspect-square w-8 h-8 z-10 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 border-white shadow-lg flex items-center justify-center pointer-events-none"
+      style={{
+        background: "transparent",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+        outline: "2px solid black",
+      }}
+    >
+      <div className="w-3 h-3 rounded-full bg-transparent border-2 border-white"></div>
+    </div>
+    <Button variant="outline" className="z-50 absolute bottom-10 left-1/2 -translate-x-1/2 border border-black" onClick={handleClick}>Confirm</Button>
+  </>;
 }
 
 export default NewHotspot;
