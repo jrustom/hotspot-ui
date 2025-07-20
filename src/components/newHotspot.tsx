@@ -9,9 +9,7 @@ function NewHotspot({ setStatus, mapRef }: { setStatus: (value: boolean) => void
     try {
       generateNewHotspot(mapRef.current?.getCenter()).then((error) => {
         if (error) {
-          // toast the error instead
           toast.error(error.message);
-          // console.log(error);
         }
       }
       );
@@ -19,9 +17,7 @@ function NewHotspot({ setStatus, mapRef }: { setStatus: (value: boolean) => void
       console.log(error);
     }
 
-
     setStatus(false);
-    // console.log(mapRef.current?.getCenter());
   }
 
 

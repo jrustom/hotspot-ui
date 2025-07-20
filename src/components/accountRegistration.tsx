@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { DropdownMenuItem } from "./ui/dropdown-menu";
+import { toast } from "sonner";
 
 export function Login({
   changeToSignUp,
@@ -56,7 +57,7 @@ export function Login({
       handleLogin(setUserData, values.username, values.password).then(
         (error) => {
           if (error) {
-            loginForm.setError("root", { message: error.message });
+            toast.error(error.message);
           }
         }
       );
@@ -101,11 +102,6 @@ export function Login({
                 )}
               />
 
-              {loginForm.formState.errors.root && (
-                <p className="text-sm text-red-500">
-                  {loginForm.formState.errors.root.message}
-                </p>
-              )}
               <Button type="submit" className="mt-5 w-full">
                 Login
               </Button>
@@ -177,7 +173,7 @@ export function SignUp({
         values.profilePicture
       ).then((error) => {
         if (error) {
-          signUpForm.setError("root", { message: error.message });
+          toast.error(error.message);
         }
       });
     } catch (error) {
@@ -285,11 +281,6 @@ export function SignUp({
                 )}
               />
 
-              {signUpForm.formState.errors.root && (
-                <p className="text-sm text-red-500">
-                  {signUpForm.formState.errors.root.message}
-                </p>
-              )}
               <Button type="submit" className="mt-5 w-full">
                 Sign up
               </Button>
