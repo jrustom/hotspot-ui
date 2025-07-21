@@ -7,12 +7,14 @@ function MainComponent({ registered }: { registered: boolean }) {
   const accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const geoLocateRef = useRef<mapboxgl.GeolocateControl | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
   }>({ lat: -73.5674, lng: 45.5019 });
+  const [userTrackingDenied, setUserTrackingDenied] = useState<boolean>(false);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -20,7 +22,7 @@ function MainComponent({ registered }: { registered: boolean }) {
         lat: position.coords.longitude,
         lng: position.coords.latitude,
       });
-    });
+    }, () => { setUserTrackingDenied(true) });
   }, []);
   // Initialize map once
   useEffect(() => {
@@ -32,6 +34,18 @@ function MainComponent({ registered }: { registered: boolean }) {
       center: [0, 0], // Note: lng, lat order for Mapbox
     });
 
+
+    // Add marker to user's current location
+    geoLocateRef.current =
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        trackUserLocation: true
+      })
+
+    mapRef.current.addControl(geoLocateRef.current);
+
     return () => {
       mapRef.current?.remove();
     };
@@ -41,11 +55,16 @@ function MainComponent({ registered }: { registered: boolean }) {
   useEffect(() => {
     if (mapRef.current) {
       if (registered) {
-        mapRef.current.easeTo({
-          zoom: 10,
-          center: [userLocation.lat, userLocation.lng],
-          duration: 2000, // 2 seconds
-        });
+        if (!userTrackingDenied) {
+          geoLocateRef.current?.trigger();
+        } else {
+          console.log("yes")
+          mapRef.current.easeTo({
+            zoom: 10,
+            center: [userLocation.lat, userLocation.lng],
+            duration: 2000, // 2 seconds
+          });
+        }
       } else {
         mapRef.current.easeTo({
           zoom: 0,
