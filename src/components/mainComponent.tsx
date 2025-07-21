@@ -14,7 +14,7 @@ function MainComponent({ registered }: { registered: boolean }) {
     lat: number;
     lng: number;
   }>({ lat: -73.5674, lng: 45.5019 });
-  const [userTrackingDenied, setUserTrackingDenied] = useState<boolean>(false);
+  const [userTrackingDenied, setUserTrackingDenied] = useState<boolean>(true);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -22,7 +22,9 @@ function MainComponent({ registered }: { registered: boolean }) {
         lat: position.coords.longitude,
         lng: position.coords.latitude,
       });
-    }, () => { setUserTrackingDenied(true) });
+
+      setUserTrackingDenied(false)
+    });
   }, []);
   // Initialize map once
   useEffect(() => {
@@ -58,7 +60,6 @@ function MainComponent({ registered }: { registered: boolean }) {
         if (!userTrackingDenied) {
           geoLocateRef.current?.trigger();
         } else {
-          console.log("yes")
           mapRef.current.easeTo({
             zoom: 10,
             center: [userLocation.lat, userLocation.lng],
