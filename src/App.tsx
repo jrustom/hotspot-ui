@@ -15,7 +15,7 @@ function App() {
   return (
     <>
       <div
-        className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-1 ${registered ? "hidden" : ""
+        className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-5 ${registered ? "hidden" : ""
           }`}
       >
         <AccountRegistration />
