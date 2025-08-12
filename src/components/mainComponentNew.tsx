@@ -21,7 +21,6 @@ function MainComponentNew({ registered }: { registered: boolean }) {
   const mapRef = useRef<MapRef>(null);
 
   useEffect(() => {
-    console.log("YES")
     navigator.geolocation.getCurrentPosition((position) => {
       setUserLocation({
         longitude: position.coords.longitude,
@@ -31,7 +30,6 @@ function MainComponentNew({ registered }: { registered: boolean }) {
       setUserTrackingDenied(false)
     });
 
-    console.log(userLocation.longitude);
   }, []);
 
   useEffect(() => {
