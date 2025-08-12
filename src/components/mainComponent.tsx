@@ -81,6 +81,7 @@ function MainComponent({ registered }: { registered: boolean }) {
       {/* <div className="w-full h-full bg-blue-200"></div> */}
       <div id="map-container" className={"w-full h-full relative"} ref={mapContainerRef} />
 
+
       <Toaster position="top-center" richColors />
     </div>
   );

@@ -3,6 +3,7 @@ import "./App.css";
 import AccountRegistration from "./components/accountRegistration";
 import MainComponent from "./components/mainComponent";
 import { useAuth } from "./contexts/AuthContext";
+import MainComponentNew from "./components/mainComponentNew";
 
 function App() {
   const { userData } = useAuth();
@@ -21,7 +22,7 @@ function App() {
         <AccountRegistration />
       </div>
       <div className="flex-1">
-        <MainComponent registered={registered} />
+        <MainComponentNew registered={registered} />
       </div>
     </>
   );
