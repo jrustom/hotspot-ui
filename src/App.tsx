@@ -7,7 +7,7 @@ import MainComponentNew from "./components/mainComponentNew";
 
 function App() {
   const { userData } = useAuth();
-  const [registered, setRegistered] = useState<boolean>(false);
+  const [registered, setRegistered] = useState<boolean>(true);
 
   useEffect(() => {
     if (userData != null) setRegistered(true);

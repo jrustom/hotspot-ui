@@ -1,9 +1,13 @@
-import Map from "react-map-gl/mapbox";
+import Map, { Marker } from "react-map-gl/mapbox";
 import type { MapRef } from "react-map-gl/mapbox";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
+import CustomMarker from "./CustomMarker";
+import Nav from "./nav";
+import { Toaster } from "./ui/sonner";
+import ChatComponent from "./ChatComponent";
 
 function MainComponentNew({ registered }: { registered: boolean }) {
   const [userLocation, setUserLocation] = useState<{
@@ -16,6 +20,8 @@ function MainComponentNew({ registered }: { registered: boolean }) {
     longitude: 0,
     zoom: 0,
   });
+
+  const [chatActive, setChatActive] = useState<boolean>(false);
 
   const mapRef = useRef<MapRef | null>(null);
   const geoLocateRef = useRef<mapboxgl.GeolocateControl | null>(null);
@@ -60,6 +66,8 @@ function MainComponentNew({ registered }: { registered: boolean }) {
 
   return (
     <div className="w-full h-full">
+      <Nav mapRef={mapRef} />
+
       <Map
         ref={mapRef}
         {...viewState}
@@ -68,7 +76,18 @@ function MainComponentNew({ registered }: { registered: boolean }) {
         style={{ width: "100%", height: "100%" }}
         mapStyle={"mapbox://styles/mapbox/standard"}
         projection={"globe"}
-      />
+      >
+        <Marker longitude={-73.5674} latitude={45.5019}>
+          {/* Only one chat can be activated at a time, so we can have a state here that says if a chat is open or not, and we just have to pass in the correct chat id to get the messages */}
+          <CustomMarker setChatActive={setChatActive} />
+        </Marker>
+      </Map>
+
+      {chatActive &&
+        <ChatComponent setChatActive={setChatActive} />
+      }
+
+      <Toaster position="top-center" richColors />
     </div>
   );
 }
