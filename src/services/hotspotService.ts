@@ -44,10 +44,10 @@ export async function generateNewHotspot(coordinates: LngLat | undefined): Promi
 }
 
 // for now we'll just get this specific hotspot for testing
-export async function getHotspots(): Promise<Hotspot | HotspotError> {
+export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
 
   try {
-    const response = await fetch('http://localhost:8080/hotspots/689a86e2d6c65b6440c875d4', {
+    const response = await fetch('http://localhost:8080/hotspots', {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -59,7 +59,7 @@ export async function getHotspots(): Promise<Hotspot | HotspotError> {
       return error;
     }
 
-    const hotspotResponse: Hotspot = await response.json();
+    const hotspotResponse: Hotspot[] = await response.json();
     console.log(hotspotResponse);
     return hotspotResponse;
 

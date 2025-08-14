@@ -65,9 +65,7 @@ function MainComponentNew({ registered }: { registered: boolean }) {
             } else {
 
               console.log(response);
-              const hotspotArray = Array();
-              hotspotArray.push(response);
-              setHotspots(hotspotArray);
+              setHotspots(response);
             }
           })
         } catch (error) {
@@ -103,8 +101,6 @@ function MainComponentNew({ registered }: { registered: boolean }) {
       >
         {hotspots.map((hotspot) => (
           <Marker longitude={hotspot.location.longitude} latitude={hotspot.location.latitude}>
-            {/* <Marker longitude={-73.5674} latitude={45.5019}> */}
-            {/* Only one chat can be activated at a time, so we can have a state here that says if a chat is open or not, and we just have to pass in the correct chat id to get the messages */}
             <HotSpot setChatActive={setChatActive} />
           </Marker>
         ))}
