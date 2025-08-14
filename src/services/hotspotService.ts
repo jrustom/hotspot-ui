@@ -2,7 +2,7 @@ import { LngLat } from "mapbox-gl";
 import { HotspotError } from "./accountService"
 
 
-interface Hotspot {
+export interface Hotspot {
   id: string,
   active: boolean,
   chatId: string,
@@ -48,7 +48,7 @@ export async function getHotspots(): Promise<Hotspot | HotspotError> {
 
   try {
     const response = await fetch('http://localhost:8080/hotspots/689a86e2d6c65b6440c875d4', {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json"
       },

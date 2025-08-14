@@ -2,8 +2,9 @@ import { generateNewHotspot } from '@/services/hotspotService';
 import { Button } from './ui/button';
 import { RefObject } from 'react';
 import { toast } from 'sonner';
+import { MapRef } from 'react-map-gl/mapbox';
 
-function NewHotspot({ setStatus, mapRef }: { setStatus: (value: boolean) => void, mapRef: RefObject<mapboxgl.Map | null> }) {
+function NewHotspot({ setStatus, mapRef }: { setStatus: (value: boolean) => void, mapRef: RefObject<MapRef | null> }) {
 
   const handleClick = () => {
     try {

@@ -1,4 +1,4 @@
-function CustomMarker({ setChatActive }: { setChatActive: React.Dispatch<React.SetStateAction<boolean>> }) {
+function HotSpot({ setChatActive }: { setChatActive: React.Dispatch<React.SetStateAction<boolean>> }) {
 
   const handleClick = () => {
     setChatActive(true)
@@ -12,4 +12,4 @@ function CustomMarker({ setChatActive }: { setChatActive: React.Dispatch<React.S
   )
 }
 
-export default CustomMarker;
+export default HotSpot;
