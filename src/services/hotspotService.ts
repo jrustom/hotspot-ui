@@ -1,30 +1,30 @@
 import { LngLat } from "mapbox-gl";
-import { HotspotError } from "./accountService"
-
+import { HotspotError } from "./accountService";
 
 export interface Hotspot {
-  id: string,
-  active: boolean,
-  chatId: string,
-  upvotes: number,
-  downvotes: number
+  id: string;
+  active: boolean;
+  chatId: string;
+  upvotes: number;
+  downvotes: number;
   location: {
-    latitude: number,
-    longitude: number
-  }
+    latitude: number;
+    longitude: number;
+  };
 }
 
-export async function generateNewHotspot(coordinates: LngLat | undefined): Promise<void | HotspotError> {
-
+export async function generateNewHotspot(
+  coordinates: LngLat | undefined
+): Promise<void | HotspotError> {
   try {
-    if (!coordinates) throw new Error;
+    if (!coordinates) throw new Error();
 
-    const response = await fetch('http://localhost:8080/hotspots', {
+    const response = await fetch("http://localhost:8080/hotspots", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ lng: coordinates.lng, lat: coordinates.lat })
+      body: JSON.stringify({ lng: coordinates.lng, lat: coordinates.lat }),
     });
 
     if (!response.ok) {
@@ -35,22 +35,21 @@ export async function generateNewHotspot(coordinates: LngLat | undefined): Promi
     // For now nothing to do with this
     const hotspotResponse: Hotspot = await response.json();
     console.log(hotspotResponse);
-
   } catch (error) {
     return {
-      message: "An error occurred while trying to add this new hotspot, please try again later."
-    }
+      message:
+        "An error occurred while trying to add this new hotspot, please try again later.",
+    };
   }
 }
 
 // for now we'll just get this specific hotspot for testing
 export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
-
   try {
-    const response = await fetch('http://localhost:8080/hotspots', {
+    const response = await fetch("http://localhost:8080/hotspots", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
     });
 
@@ -62,15 +61,9 @@ export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
     const hotspotResponse: Hotspot[] = await response.json();
     console.log(hotspotResponse);
     return hotspotResponse;
-
-
-
-
   } catch (error) {
     return {
-      message: "An error occured while trying to retrieve hotspot."
-    }
+      message: "An error occured while trying to retrieve hotspot.",
+    };
   }
-
-
 }

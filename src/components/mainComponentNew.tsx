@@ -2,7 +2,7 @@ import Map, { Marker } from "react-map-gl/mapbox";
 import type { MapRef } from "react-map-gl/mapbox";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useRef, useState } from "react";
+import { act, useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import HotSpot from "./Hotspot";
 import Nav from "./nav";
@@ -23,11 +23,12 @@ function MainComponentNew({ registered }: { registered: boolean }) {
   });
 
   const [chatActive, setChatActive] = useState<boolean>(false);
+  const [activeChatID, setActiveChatID] = useState<string | null>(null);
 
   const mapRef = useRef<MapRef | null>(null);
   const geoLocateRef = useRef<mapboxgl.GeolocateControl | null>(null);
 
-  const [hotspots, setHotspots] = useState<Hotspot[]>([])
+  const [hotspots, setHotspots] = useState<Hotspot[]>([]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -56,22 +57,19 @@ function MainComponentNew({ registered }: { registered: boolean }) {
       if (registered) {
         // fetch hotspots
 
-
         try {
           getHotspots().then((response) => {
             // error
-            if ('message' in response) {
+            if ("message" in response) {
               console.log(response.message);
             } else {
-
               console.log(response);
               setHotspots(response);
             }
-          })
+          });
         } catch (error) {
           console.log(error);
         }
-
 
         if (!userTrackingDenied) {
           geoLocateRef.current?.trigger();
@@ -100,16 +98,22 @@ function MainComponentNew({ registered }: { registered: boolean }) {
         projection={"globe"}
       >
         {hotspots.map((hotspot) => (
-          <Marker longitude={hotspot.location.longitude} latitude={hotspot.location.latitude}>
-            <HotSpot setChatActive={setChatActive} />
+          <Marker
+            longitude={hotspot.location.longitude}
+            latitude={hotspot.location.latitude}
+          >
+            <HotSpot
+              hotspotInfo={hotspot}
+              setChatActive={setChatActive}
+              setActiveChatID={setActiveChatID}
+            />
           </Marker>
         ))}
       </Map>
 
-
-      {chatActive &&
-        <ChatComponent setChatActive={setChatActive} />
-      }
+      {chatActive && activeChatID && (
+        <ChatComponent chatId={activeChatID} setChatActive={setChatActive} />
+      )}
 
       <Toaster position="top-center" richColors />
     </div>

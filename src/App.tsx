@@ -7,7 +7,7 @@ import MainComponentNew from "./components/mainComponentNew";
 
 function App() {
   const { userData } = useAuth();
-  const [registered, setRegistered] = useState<boolean>(false);
+  const [registered, setRegistered] = useState<boolean>(true);
 
   useEffect(() => {
     if (userData != null) setRegistered(true);
@@ -16,8 +16,9 @@ function App() {
   return (
     <>
       <div
-        className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-5 ${registered ? "hidden" : ""
-          }`}
+        className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-5 ${
+          registered ? "hidden" : ""
+        }`}
       >
         <AccountRegistration />
       </div>
