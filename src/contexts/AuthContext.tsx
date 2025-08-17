@@ -27,7 +27,21 @@ export const AuthContextProvider = ({
 }) => {
   const [userData, setUserData] = useState<User | null>(null);
 
-  useEffect(() => {}, [userData]);
+  // will need to redefine setUserData to pass in null being a logout, and
+  // setting the locastorage accordingly
+
+  useEffect(() => {
+    const storedUserInfo = localStorage.getItem("userData");
+
+    if (storedUserInfo != null) {
+      setUserData(JSON.parse(storedUserInfo));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userData != null)
+      localStorage.setItem("userData", JSON.stringify(userData));
+  }, [userData]);
 
   return (
     <AuthContext.Provider value={{ userData, setUserData }}>

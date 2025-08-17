@@ -1,4 +1,5 @@
-import { getMessages, Message } from "@/services/ChatService";
+import { useAuth, User } from "@/contexts/AuthContext";
+import { getMessages, getSender, Message } from "@/services/ChatService";
 import { Client } from "@stomp/stompjs";
 import { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";
@@ -15,6 +16,8 @@ function ChatComponent({
   const clientPrefix = import.meta.env.VITE_WS_CLIENT_PREFIX;
   const clientURL = import.meta.env.VITE_WS_CLIENT_URL;
   const serverPrefix = import.meta.env.VITE_WS_SERVER_PREFIX;
+
+  const { userData } = useAuth();
 
   const [stompClient, setStompClient] = useState<Client | null>(null);
   const [input, setInput] = useState<string>(""); // single input for this chat
@@ -86,9 +89,12 @@ function ChatComponent({
     if (stompClient && input.trim()) {
       const destination = `${serverPrefix}/${chatId}/message/send`;
       console.log(`Sending message to: ${destination}`, input);
+      console.log(input);
+      console.log(userData?.id);
+
       stompClient.publish({
         destination: destination,
-        body: JSON.stringify({ content: input, senderID: 100 }),
+        body: JSON.stringify({ content: input, senderId: userData?.id }),
       });
       setInput("");
     }
@@ -105,7 +111,6 @@ function ChatComponent({
           </div>
         </div>
       ) :  */}
-      (
       <>
         {/* Transparent overlay to block pointer events */}
         <div
@@ -148,23 +153,38 @@ function ChatComponent({
               {/* Messages list */}
               {messages.length > 0 ? (
                 <div className="space-y-3 flex flex-col">
-                  {messages.map((msg, idx) => (
-                    <div key={idx} className="flex justify-start">
-                      <div className="max-w-xs lg:max-w-md px-4 py-2 bg-gray-700 bg-opacity-80 text-white rounded-lg shadow">
-                        <div className="text-xs text-gray-300 mb-1 font-medium">
-                          {msg.senderId || "Unknown"}
+                  {messages.map((msg, idx) => {
+                    const myMessage = msg.senderId == userData?.id;
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`flex ${
+                          myMessage ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`max-w-48 px-3 py-2 bg-gray-700 bg-opacity-80 text-white rounded-lg shadow ${
+                            myMessage ? "text-right" : "text-left"
+                          }`}
+                        >
+                          <div className="text-xs text-gray-300 mb-1 font-medium">
+                            {msg.senderUsername}
+                          </div>
+                          <div className="text-sm text-white">
+                            {msg.content}
+                          </div>
                         </div>
-                        <div className="text-sm text-white">{msg.content}</div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {/* Invisible div to scroll to */}
                   <div ref={messagesEndRef} />
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-gray-300">
                   <span className="text-sm opacity-75">
-                    Messages will appear here...
+                    There are no messages yet
                   </span>
                 </div>
               )}
@@ -190,7 +210,7 @@ function ChatComponent({
           </div>
         </div>
       </>
-      ){/* } */}
+      {/* } */}
     </>
   );
 }

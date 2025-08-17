@@ -1,8 +1,8 @@
 import Map, { Marker } from "react-map-gl/mapbox";
-import type { MapRef } from "react-map-gl/mapbox";
+import type { MapRef, ViewState } from "react-map-gl/mapbox";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import { act, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import HotSpot from "./Hotspot";
 import Nav from "./nav";
@@ -16,10 +16,18 @@ function MainComponentNew({ registered }: { registered: boolean }) {
     longitude: number;
   }>({ latitude: 45.5019, longitude: -73.5674 });
   const [userTrackingDenied, setUserTrackingDenied] = useState<boolean>(true);
-  const [viewState, setViewState] = useState({
-    latitude: 0,
-    longitude: 0,
-    zoom: 0,
+  const [viewState, setViewState] = useState(() => {
+    const lastUserLocation = localStorage.getItem("lastUserLocation");
+
+    if (lastUserLocation != null) {
+      return JSON.parse(lastUserLocation);
+    }
+
+    return {
+      latitude: 0,
+      longitude: 0,
+      zoom: 0,
+    };
   });
 
   const [chatActive, setChatActive] = useState<boolean>(false);
@@ -29,6 +37,11 @@ function MainComponentNew({ registered }: { registered: boolean }) {
   const geoLocateRef = useRef<mapboxgl.GeolocateControl | null>(null);
 
   const [hotspots, setHotspots] = useState<Hotspot[]>([]);
+
+  const updateViewState = (viewState: ViewState) => {
+    localStorage.setItem("lastUserLocation", JSON.stringify(viewState));
+    setViewState(viewState);
+  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -63,7 +76,6 @@ function MainComponentNew({ registered }: { registered: boolean }) {
             if ("message" in response) {
               console.log(response.message);
             } else {
-              console.log(response);
               setHotspots(response);
             }
           });
@@ -91,7 +103,7 @@ function MainComponentNew({ registered }: { registered: boolean }) {
       <Map
         ref={mapRef}
         {...viewState}
-        onMove={(evt) => setViewState(evt.viewState)}
+        onMove={(evt) => updateViewState(evt.viewState)}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
         mapStyle={"mapbox://styles/mapbox/standard"}

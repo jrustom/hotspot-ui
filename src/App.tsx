@@ -10,18 +10,21 @@ function App() {
   const [registered, setRegistered] = useState<boolean>(true);
 
   useEffect(() => {
-    if (userData != null) setRegistered(true);
+    if (userData == null) setRegistered(false);
+    else setRegistered(true);
   }, [userData]);
 
   return (
     <>
-      <div
-        className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-5 ${
-          registered ? "hidden" : ""
-        }`}
-      >
-        <AccountRegistration />
-      </div>
+      {registered ? (
+        <></>
+      ) : (
+        <div
+          className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-5`}
+        >
+          <AccountRegistration />
+        </div>
+      )}
       <div className="flex-1">
         <MainComponentNew registered={registered} />
       </div>

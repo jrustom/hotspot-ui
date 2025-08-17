@@ -32,9 +32,8 @@ export async function generateNewHotspot(
       return error;
     }
 
-    // For now nothing to do with this
-    const hotspotResponse: Hotspot = await response.json();
-    console.log(hotspotResponse);
+    // // For now nothing to do with this
+    // const hotspotResponse: Hotspot = await response.json();
   } catch (error) {
     return {
       message:
@@ -59,7 +58,6 @@ export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
     }
 
     const hotspotResponse: Hotspot[] = await response.json();
-    console.log(hotspotResponse);
     return hotspotResponse;
   } catch (error) {
     return {
