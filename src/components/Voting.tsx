@@ -1,13 +1,24 @@
+import { Hotspot } from "@/services/hotspotService";
 import { useState } from "react";
 
 function Voting() {
 
-    const [hotspots, setHotspots] = useState<
+  const [hotspots] = useState<Hotspot[] | null>(() => {
+    const hotspots = localStorage.getItem('hotspots');
 
-    return (
-        <>
-        </>
-    )
+    if (hotspots)
+      return JSON.parse(hotspots);
+  });
+
+
+
+
+
+
+  return (
+    <>
+    </>
+  )
 }
 
 export default Voting;

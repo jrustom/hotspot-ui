@@ -1,6 +1,6 @@
 function AccountSettings() {
   const handleLogout = () => {
-    localStorage.removeItem("userData");
+    localStorage.clear();
     window.location.reload();
   };
 
