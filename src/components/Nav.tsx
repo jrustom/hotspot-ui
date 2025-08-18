@@ -6,6 +6,7 @@ import { useState, RefObject } from "react";
 import NewHotspot from "./NewHotspot";
 import AccountSettings from "./AccountSettings";
 import { MapRef } from "react-map-gl/mapbox";
+import Voting from "./voting";
 // className="absolute w-15 left-5 top-1/2 -translate-y-1/2 z-1 bg-white rounded-md"
 
 function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
@@ -34,7 +35,9 @@ function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
               src="/src/assets/votingIcon.png"
             />
           </PopoverTrigger>
-          <PopoverContent side="right" sideOffset={10}></PopoverContent>
+          <PopoverContent side="right" sideOffset={10}>
+            <Voting />
+          </PopoverContent>
         </Popover>
 
         <Popover>
