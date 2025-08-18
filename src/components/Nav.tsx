@@ -2,14 +2,13 @@
 
 import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { Popover } from "./ui/popover";
-import { useState, RefObject } from 'react';
+import { useState, RefObject } from "react";
 import NewHotspot from "./NewHotspot";
+import AccountSettings from "./AccountSettings";
 import { MapRef } from "react-map-gl/mapbox";
 // className="absolute w-15 left-5 top-1/2 -translate-y-1/2 z-1 bg-white rounded-md"
 
 function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
-
-
   const [newHotspotButton, setNewHotspotButton] = useState<boolean>(false);
 
   return (
@@ -47,13 +46,14 @@ function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
               src="/src/assets/settingsIcon.png"
             />
           </PopoverTrigger>
-          <PopoverContent side="right" sideOffset={10}></PopoverContent>
+          <PopoverContent side="right" sideOffset={10}>
+            <AccountSettings />
+          </PopoverContent>
         </Popover>
-
-
       </div>
-      {newHotspotButton && (<NewHotspot setStatus={setNewHotspotButton} mapRef={mapRef} />)}
-
+      {newHotspotButton && (
+        <NewHotspot setStatus={setNewHotspotButton} mapRef={mapRef} />
+      )}
     </>
   );
 }
