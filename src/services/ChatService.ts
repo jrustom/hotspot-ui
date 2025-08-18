@@ -12,7 +12,8 @@ export interface Message {
 
 export async function getSender(userId: string): Promise<User | HotspotError> {
   try {
-    const response = await fetch(`http://localhost:8080/users/${userId}`, {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(`${url}/users/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,8 @@ export async function getMessages(
   chatID: string
 ): Promise<Message[] | HotspotError> {
   try {
-    const response = await fetch(`http://localhost:8080/chats/${chatID}`, {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(`${url}/chats/${chatID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

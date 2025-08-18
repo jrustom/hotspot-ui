@@ -19,7 +19,8 @@ export async function generateNewHotspot(
   try {
     if (!coordinates) throw new Error();
 
-    const response = await fetch("http://localhost:8080/hotspots", {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(`${url}/hotspots`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +46,8 @@ export async function generateNewHotspot(
 // for now we'll just get this specific hotspot for testing
 export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
   try {
-    const response = await fetch("http://localhost:8080/hotspots", {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(`${url}/hotspots`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
