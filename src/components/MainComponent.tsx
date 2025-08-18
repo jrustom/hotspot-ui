@@ -65,11 +65,9 @@ function MainComponent({ registered }: { registered: boolean }) {
     mapRef.current?.addControl(geoLocateRef.current);
   }, [mapRef.current]);
 
-
   useEffect(() => {
     if (mapRef.current) {
       if (registered) {
-
         if (!userTrackingDenied) {
           geoLocateRef.current?.trigger();
         } else {
@@ -92,15 +90,20 @@ function MainComponent({ registered }: { registered: boolean }) {
           console.log(response.message);
         } else {
           // save in local storage
-          localStorage.setItem("hotspots", JSON.stringify(response))
+          localStorage.setItem("hotspots", JSON.stringify(response));
           setHotspots(response);
         }
       });
     } catch (error) {
       console.log(error);
     }
-  }, [])
+  }, []);
 
+  useEffect(() => {
+    if (hotspots.length > 0) {
+      localStorage.setItem("hotspots", JSON.stringify(hotspots));
+    }
+  }, [hotspots]);
 
   return (
     <div className="w-full h-full">
@@ -126,7 +129,8 @@ function MainComponent({ registered }: { registered: boolean }) {
                 setChatActive={setChatActive}
                 setActiveChatID={setActiveChatID}
               />
-            </Marker>)
+            </Marker>
+          );
         })}
       </Map>
 
