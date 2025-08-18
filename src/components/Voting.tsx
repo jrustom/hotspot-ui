@@ -9,8 +9,7 @@ function Voting() {
   });
 
   return (
-    <div className="p-4 min-w-64">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">Hotspots</h3>
+    <div className="p-4 min-w-64 bg-white rounded-md">
 
       <div className="space-y-2">
         {hotspots && hotspots.length > 0 ? (
