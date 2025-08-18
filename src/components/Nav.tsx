@@ -3,7 +3,7 @@
 import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { Popover } from "./ui/popover";
 import { useState, RefObject } from 'react';
-import NewHotspot from "./newHotspot";
+import NewHotspot from "./NewHotspot";
 import { MapRef } from "react-map-gl/mapbox";
 // className="absolute w-15 left-5 top-1/2 -translate-y-1/2 z-1 bg-white rounded-md"
 

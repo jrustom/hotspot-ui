@@ -18,7 +18,7 @@ function HotSpot({
     <>
       <div
         onClick={handleClick}
-        className="w-6 h-6 rounded-full bg-red-500 bg-opacity-50 border-2 border-red-700"
+        className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 border-2 border-white shadow-lg hover:scale-110 transition-transform"
       />
     </>
   );

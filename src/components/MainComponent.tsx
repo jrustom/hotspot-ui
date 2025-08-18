@@ -5,12 +5,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import HotSpot from "./Hotspot";
-import Nav from "./nav";
+import Nav from "./Nav";
 import { Toaster } from "./ui/sonner";
 import ChatComponent from "./ChatComponent";
 import { getHotspots, Hotspot } from "@/services/hotspotService";
 
-function MainComponentNew({ registered }: { registered: boolean }) {
+function MainComponent({ registered }: { registered: boolean }) {
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -65,23 +65,10 @@ function MainComponentNew({ registered }: { registered: boolean }) {
     mapRef.current?.addControl(geoLocateRef.current);
   }, [mapRef.current]);
 
+
   useEffect(() => {
     if (mapRef.current) {
       if (registered) {
-        // fetch hotspots
-
-        try {
-          getHotspots().then((response) => {
-            // error
-            if ("message" in response) {
-              console.log(response.message);
-            } else {
-              setHotspots(response);
-            }
-          });
-        } catch (error) {
-          console.log(error);
-        }
 
         if (!userTrackingDenied) {
           geoLocateRef.current?.trigger();
@@ -96,6 +83,25 @@ function MainComponentNew({ registered }: { registered: boolean }) {
     }
   }, [registered, userTrackingDenied, userLocation]);
 
+  useEffect(() => {
+    // fetch hotspots
+    try {
+      getHotspots().then((response) => {
+        // error
+        if ("message" in response) {
+          console.log(response.message);
+        } else {
+          // save in local storage
+          localStorage.setItem("hotspots", JSON.stringify(response))
+          setHotspots(response);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [])
+
+
   return (
     <div className="w-full h-full">
       <Nav mapRef={mapRef} />
@@ -109,18 +115,19 @@ function MainComponentNew({ registered }: { registered: boolean }) {
         mapStyle={"mapbox://styles/mapbox/standard"}
         projection={"globe"}
       >
-        {hotspots.map((hotspot) => (
-          <Marker
-            longitude={hotspot.location.longitude}
-            latitude={hotspot.location.latitude}
-          >
-            <HotSpot
-              hotspotInfo={hotspot}
-              setChatActive={setChatActive}
-              setActiveChatID={setActiveChatID}
-            />
-          </Marker>
-        ))}
+        {hotspots.map((hotspot) => {
+          return (
+            <Marker
+              longitude={hotspot.location.longitude}
+              latitude={hotspot.location.latitude}
+            >
+              <HotSpot
+                hotspotInfo={hotspot}
+                setChatActive={setChatActive}
+                setActiveChatID={setActiveChatID}
+              />
+            </Marker>)
+        })}
       </Map>
 
       {chatActive && activeChatID && (
@@ -132,4 +139,4 @@ function MainComponentNew({ registered }: { registered: boolean }) {
   );
 }
 
-export default MainComponentNew;
+export default MainComponent;

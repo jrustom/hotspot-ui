@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import AccountRegistration from "./components/accountRegistration";
-import MainComponent from "./components/mainComponent";
+import AccountRegistration from "./components/AccountRegistration";
 import { useAuth } from "./contexts/AuthContext";
-import MainComponentNew from "./components/mainComponentNew";
+import MainComponent from "./components/MainComponent";
 
 function App() {
   const { userData } = useAuth();
@@ -26,7 +25,7 @@ function App() {
         </div>
       )}
       <div className="flex-1">
-        <MainComponentNew registered={registered} />
+        <MainComponent registered={registered} />
       </div>
     </>
   );
