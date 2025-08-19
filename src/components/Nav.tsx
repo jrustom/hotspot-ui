@@ -21,7 +21,7 @@ function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
               className={
                 "aspect-square h-full p-3 md:p-2 rounded hover:bg-gray-200 cursor-pointer transition-colors data-[state=open]:bg-gray-200"
               }
-              src="/src/assets/addIcon.png"
+              src="/addIcon.png"
             />
           </PopoverTrigger>
         </Popover>
@@ -46,7 +46,7 @@ function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
               className={
                 "aspect-square h-full p-3 md:p-2 rounded hover:bg-gray-200 cursor-pointer transition-colors data-[state=open]:bg-gray-200"
               }
-              src="/src/assets/settingsIcon.png"
+              src="/settingsIcon.png"
             />
           </PopoverTrigger>
           <PopoverContent side="right" sideOffset={10}>

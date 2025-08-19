@@ -54,6 +54,8 @@ function MainComponent({ registered }: { registered: boolean }) {
     });
   }, []);
 
+  console.log("SockJS URL =", import.meta.env.VITE_WS_STOMPJS_URL);
+
   useEffect(() => {
     geoLocateRef.current = new mapboxgl.GeolocateControl({
       positionOptions: {
