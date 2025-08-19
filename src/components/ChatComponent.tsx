@@ -1,5 +1,5 @@
-import { useAuth, User } from "@/contexts/AuthContext";
-import { getMessages, getSender, Message } from "@/services/ChatService";
+import { useAuth } from "@/contexts/AuthContext";
+import { getMessages, Message } from "@/services/ChatService";
 import { Client } from "@stomp/stompjs";
 import { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";

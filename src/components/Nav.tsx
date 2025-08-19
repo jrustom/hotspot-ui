@@ -6,7 +6,7 @@ import { useState, RefObject } from "react";
 import NewHotspot from "./NewHotspot";
 import AccountSettings from "./AccountSettings";
 import { MapRef } from "react-map-gl/mapbox";
-import Voting from "./Voting";
+// import Voting from "./Voting";
 // className="absolute w-15 left-5 top-1/2 -translate-y-1/2 z-1 bg-white rounded-md"
 
 function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
