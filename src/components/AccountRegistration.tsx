@@ -237,7 +237,7 @@ export function SignUp({
                             <div>
                               {field.value ? (
                                 <img
-                                  src={`/src/assets/avatars/${field.value}.svg`}
+                                  src={`/avatars/${field.value}.svg`}
                                   alt={field.value}
                                   className="size-15 md:size-20"
                                 />
@@ -264,7 +264,7 @@ export function SignUp({
                               ].map((pic, i) => (
                                 <DropdownMenuItem key={i}>
                                   <img
-                                    src={`/src/assets/avatars/${pic}.svg`}
+                                    src={`/avatars/${pic}.svg`}
                                     alt={pic}
                                     onClick={() => field.onChange(pic)}
                                     className="flex aspect-square size-15 md:size-20 cursor-pointer"
