@@ -1,8 +1,10 @@
 import { LngLat } from "mapbox-gl";
 import { HotspotError } from "./accountService";
+import { User } from "@/contexts/AuthContext";
 
 export interface Hotspot {
   id: string;
+  name: string;
   active: boolean;
   chatId: string;
   upvotes: number;
@@ -13,9 +15,24 @@ export interface Hotspot {
   };
 }
 
+export interface HotspotVote {
+  id: string;
+  name: string;
+  active: boolean;
+  chatId: string;
+  upvotes: number;
+  downvotes: number;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  votingUser: User;
+}
+
 export async function generateNewHotspot(
+  name: string,
   coordinates: LngLat | undefined
-): Promise<void | HotspotError> {
+): Promise<Hotspot | HotspotError> {
   try {
     if (!coordinates) throw new Error();
 
@@ -25,16 +42,19 @@ export async function generateNewHotspot(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ lng: coordinates.lng, lat: coordinates.lat }),
+      body: JSON.stringify({
+        name,
+        lng: coordinates.lng,
+        lat: coordinates.lat,
+      }),
     });
 
     if (!response.ok) {
       const error = await response.json();
       return error;
     }
-
-    // // For now nothing to do with this
-    // const hotspotResponse: Hotspot = await response.json();
+    const hotspotResponse: Hotspot = await response.json();
+    return hotspotResponse;
   } catch (error) {
     return {
       message:
@@ -64,6 +84,101 @@ export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
   } catch (error) {
     return {
       message: "An error occured while trying to retrieve hotspot.",
+    };
+  }
+}
+
+export async function upvoteHotspot(
+  hotspotID: string,
+  userID: string,
+  setUserData: (user: User) => void
+): Promise<Hotspot | HotspotError> {
+  try {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(
+      `${url}/hotspots/upvotes/${hotspotID}/${userID}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      return error;
+    }
+
+    const hotspotResponse: HotspotVote = await response.json();
+
+    setUserData(hotspotResponse.votingUser);
+
+    return hotspotResponse;
+  } catch (error) {
+    return {
+      message: "An error occured while trying to upvote hotspot",
+    };
+  }
+}
+
+export async function cancelUpvoteHotspot(
+  hotspotID: string,
+  userID: string,
+  setUserData: (user: User) => void
+): Promise<Hotspot | HotspotError> {
+  try {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(
+      `${url}/hotspots/upvotes/${hotspotID}/${userID}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      return error;
+    }
+
+    const hotspotResponse: HotspotVote = await response.json();
+
+    setUserData(hotspotResponse.votingUser);
+
+    return hotspotResponse;
+  } catch (error) {
+    return {
+      message: "An error occured while trying to cancel upvote for hotspot",
+    };
+  }
+}
+
+export async function activateHotspot(
+  hotspotID: string
+): Promise<Hotspot | HotspotError> {
+  try {
+    const url = import.meta.env.VITE_BASE_URL;
+    const response = await fetch(`${url}/hotspots/${hotspotID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return error;
+    }
+
+    const hotspotResponse: Hotspot = await response.json();
+
+    return hotspotResponse;
+  } catch (error) {
+    return {
+      message: "An error occured while trying to activate the hotspot",
     };
   }
 }

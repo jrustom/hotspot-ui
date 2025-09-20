@@ -6,10 +6,21 @@ import { useState, RefObject } from "react";
 import NewHotspot from "./NewHotspot";
 import AccountSettings from "./AccountSettings";
 import { MapRef } from "react-map-gl/mapbox";
+import Voting from "./Voting";
+import { Hotspot } from "@/services/hotspotService";
+import { set } from "react-hook-form";
 // import Voting from "./Voting";
 // className="absolute w-15 left-5 top-1/2 -translate-y-1/2 z-1 bg-white rounded-md"
 
-function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
+function Nav({
+  mapRef,
+  hotspots,
+  setHotspots,
+}: {
+  mapRef: RefObject<MapRef | null>;
+  hotspots: Hotspot[];
+  setHotspots: (hotspots: Hotspot[]) => void;
+}) {
   const [newHotspotButton, setNewHotspotButton] = useState<boolean>(false);
 
   return (
@@ -26,19 +37,23 @@ function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
           </PopoverTrigger>
         </Popover>
 
-        {/* <Popover> */}
-        {/*   <PopoverTrigger asChild> */}
-        {/*     <img */}
-        {/*       className={ */}
-        {/*         "aspect-square h-full mx-2 md:mx-0 md:my-2 p-3 md:p-2 rounded hover:bg-gray-200 cursor-pointer transition-colors data-[state=open]:bg-gray-200" */}
-        {/*       } */}
-        {/*       src="/src/assets/votingIcon.png" */}
-        {/*     /> */}
-        {/*   </PopoverTrigger> */}
-        {/*   <PopoverContent side="right" sideOffset={10}> */}
-        {/*     <Voting /> */}
-        {/*   </PopoverContent> */}
-        {/* </Popover> */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <img
+              className={
+                "aspect-square h-full mx-2 md:mx-0 md:my-2 p-3 md:p-2 rounded hover:bg-gray-200 cursor-pointer transition-colors data-[state=open]:bg-gray-200"
+              }
+              src="/votingIcon.png"
+            />
+          </PopoverTrigger>
+          <PopoverContent side="right" sideOffset={10}>
+            <Voting
+              mapRef={mapRef}
+              hotspots={hotspots}
+              setHotspots={setHotspots}
+            />
+          </PopoverContent>
+        </Popover>
 
         <Popover>
           <PopoverTrigger asChild>
@@ -55,7 +70,7 @@ function Nav({ mapRef }: { mapRef: RefObject<MapRef | null> }) {
         </Popover>
       </div>
       {newHotspotButton && (
-        <NewHotspot setStatus={setNewHotspotButton} mapRef={mapRef} />
+        <NewHotspot setStatus={setNewHotspotButton} mapRef={mapRef} hotspots={hotspots} setHotspots={setHotspots}/>
       )}
     </>
   );

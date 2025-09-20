@@ -4,7 +4,12 @@ export interface User {
   id: string;
   username: string;
   profilePicture: string;
+  voteRecords: VoteRecords;
 }
+
+export type VoteType = "UPVOTE" | "DOWNVOTE";
+
+type VoteRecords = Record<string, VoteType>;
 
 interface UserAuth {
   userData: User | null;

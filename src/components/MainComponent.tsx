@@ -36,7 +36,12 @@ function MainComponent({ registered }: { registered: boolean }) {
   const mapRef = useRef<MapRef | null>(null);
   const geoLocateRef = useRef<mapboxgl.GeolocateControl | null>(null);
 
-  const [hotspots, setHotspots] = useState<Hotspot[]>([]);
+  const [hotspots, setHotspots] = useState<Hotspot[]>(() => {
+    const hotspots = localStorage.getItem("hotspots");
+
+    if (hotspots) return JSON.parse(hotspots);
+    return [];
+  });
 
   const updateViewState = (viewState: ViewState) => {
     localStorage.setItem("lastUserLocation", JSON.stringify(viewState));
@@ -53,8 +58,6 @@ function MainComponent({ registered }: { registered: boolean }) {
       setUserTrackingDenied(false);
     });
   }, []);
-
-  console.log("SockJS URL =", import.meta.env.VITE_WS_STOMPJS_URL);
 
   useEffect(() => {
     geoLocateRef.current = new mapboxgl.GeolocateControl({
@@ -107,9 +110,26 @@ function MainComponent({ registered }: { registered: boolean }) {
     }
   }, [hotspots]);
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const response = await getHotspots();
+
+      if ("message" in response) {
+        console.log(response.message);
+        return;
+      }
+
+      const hotspotResponse = response as Hotspot[];
+
+      localStorage.setItem("hotspots", JSON.stringify(hotspotResponse));
+      setHotspots(hotspotResponse);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="w-full h-full">
-      <Nav mapRef={mapRef} />
+      <Nav mapRef={mapRef} hotspots={hotspots} setHotspots={setHotspots} />
 
       <Map
         ref={mapRef}
@@ -120,8 +140,8 @@ function MainComponent({ registered }: { registered: boolean }) {
         mapStyle={"mapbox://styles/mapbox/standard"}
         projection={"globe"}
       >
-        {hotspots.map((hotspot) => {
-          return (
+        {hotspots.map((hotspot) =>
+          hotspot.active ? (
             <Marker
               longitude={hotspot.location.longitude}
               latitude={hotspot.location.latitude}
@@ -132,8 +152,10 @@ function MainComponent({ registered }: { registered: boolean }) {
                 setActiveChatID={setActiveChatID}
               />
             </Marker>
-          );
-        })}
+          ) : (
+            <></>
+          )
+        )}
       </Map>
 
       {chatActive && activeChatID && (
