@@ -67,7 +67,7 @@ function Voting({
 
   return (
     <div className="p-4 min-w-50 bg-white rounded-md">
-      <div className="space-y-2">
+      <div className="space-y-2 overflow-auto max-h-[410px]">
         {hotspots && hotspots.length > 0 ? (
           (() => {
             const inactiveHotspots = hotspots.filter(
