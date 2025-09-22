@@ -2,12 +2,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import {
   activateHotspot,
   cancelUpvoteHotspot,
-  getHotspots,
   Hotspot,
-  HotspotVote,
   upvoteHotspot,
 } from "@/services/hotspotService";
-import { RefObject, useEffect, useState } from "react";
+import { RefObject } from "react";
 import { MapRef } from "react-map-gl/mapbox";
 
 function Voting({
@@ -88,11 +86,10 @@ function Voting({
                   </div>
                   {/* make the background the opposite colour of what it is so green and then back to normal if its already green */}
                   <button
-                    className={`px-5 py-2 ${
-                      userData?.voteRecords[hotspot.id] === "UPVOTE"
+                    className={`px-5 py-2 ${userData?.voteRecords[hotspot.id] === "UPVOTE"
                         ? "bg-green-500 hover:bg-white"
                         : "bg-white hover:bg-green-500"
-                    } text-black text-md font-medium rounded-md transition-colors duration-200`}
+                      } text-black text-md font-medium rounded-md transition-colors duration-200`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleUpvote(hotspot.id);

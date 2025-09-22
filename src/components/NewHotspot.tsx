@@ -1,7 +1,6 @@
 import { generateNewHotspot, Hotspot } from "@/services/hotspotService";
 import { Button } from "./ui/button";
 import { RefObject, useState } from "react";
-import { toast } from "sonner";
 import { MapRef } from "react-map-gl/mapbox";
 import {
   Dialog,

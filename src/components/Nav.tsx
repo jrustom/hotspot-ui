@@ -1,5 +1,3 @@
-// the nav will be collapsible on the left (bottom on mobile) and will have sections for account details, voting/hotspots/newhotspots, and personal chats
-
 import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { Popover } from "./ui/popover";
 import { useState, RefObject } from "react";
@@ -8,8 +6,6 @@ import AccountSettings from "./AccountSettings";
 import { MapRef } from "react-map-gl/mapbox";
 import Voting from "./Voting";
 import { Hotspot } from "@/services/hotspotService";
-import { set } from "react-hook-form";
-// import Voting from "./Voting";
 // className="absolute w-15 left-5 top-1/2 -translate-y-1/2 z-1 bg-white rounded-md"
 
 function Nav({
@@ -70,7 +66,7 @@ function Nav({
         </Popover>
       </div>
       {newHotspotButton && (
-        <NewHotspot setStatus={setNewHotspotButton} mapRef={mapRef} hotspots={hotspots} setHotspots={setHotspots}/>
+        <NewHotspot setStatus={setNewHotspotButton} mapRef={mapRef} hotspots={hotspots} setHotspots={setHotspots} />
       )}
     </>
   );
