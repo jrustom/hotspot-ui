@@ -34,11 +34,10 @@ function Voting({
       if (userData?.voteRecords[hotspotId] === "UPVOTE") {
         response = await cancelUpvoteHotspot(
           hotspotId,
-          userData.id,
           setUserData
         );
       } else {
-        response = await upvoteHotspot(hotspotId, userData.id, setUserData);
+        response = await upvoteHotspot(hotspotId, setUserData);
       }
 
       if ("message" in response) {
@@ -87,8 +86,8 @@ function Voting({
                   {/* make the background the opposite colour of what it is so green and then back to normal if its already green */}
                   <button
                     className={`px-5 py-2 ${userData?.voteRecords[hotspot.id] === "UPVOTE"
-                        ? "bg-green-500 hover:bg-white"
-                        : "bg-white hover:bg-green-500"
+                      ? "bg-green-500 hover:bg-white"
+                      : "bg-white hover:bg-green-500"
                       } text-black text-md font-medium rounded-md transition-colors duration-200`}
                     onClick={(e) => {
                       e.stopPropagation();

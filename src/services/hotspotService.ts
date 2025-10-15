@@ -67,13 +67,11 @@ export async function generateNewHotspot(
 export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
   try {
     const url = import.meta.env.VITE_BASE_URL;
-    const token = localStorage.getItem("jwt");
 
-    const response = await fetch(`${url}/hotspots`, {
+    const response = await fetch(`${url}/hotspots/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
       },
     });
 
@@ -93,7 +91,6 @@ export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
 
 export async function upvoteHotspot(
   hotspotID: string,
-  userID: string,
   setUserData: (user: User) => void
 ): Promise<Hotspot | HotspotError> {
   try {
@@ -101,7 +98,7 @@ export async function upvoteHotspot(
     const token = localStorage.getItem("jwt");
 
     const response = await fetch(
-      `${url}/hotspots/upvotes/${hotspotID}/${userID}`,
+      `${url}/hotspots/upvotes/${hotspotID}`,
       {
         method: "PUT",
         headers: {
@@ -130,7 +127,6 @@ export async function upvoteHotspot(
 
 export async function cancelUpvoteHotspot(
   hotspotID: string,
-  userID: string,
   setUserData: (user: User) => void
 ): Promise<Hotspot | HotspotError> {
   try {
@@ -138,7 +134,7 @@ export async function cancelUpvoteHotspot(
     const token = localStorage.getItem("jwt");
 
     const response = await fetch(
-      `${url}/hotspots/upvotes/${hotspotID}/${userID}`,
+      `${url}/hotspots/upvotes/${hotspotID}`,
       {
         method: "DELETE",
         headers: {

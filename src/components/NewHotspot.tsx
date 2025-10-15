@@ -71,7 +71,7 @@ function NewHotspot({
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <div className="z-50 absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
+        <div className="z-50 absolute bottom-30 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
           <DialogTrigger asChild>
             <Button variant="outline" className="border border-black">
               Confirm

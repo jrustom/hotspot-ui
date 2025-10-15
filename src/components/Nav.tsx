@@ -42,7 +42,7 @@ function Nav({
               src="/votingIcon.png"
             />
           </PopoverTrigger>
-          <PopoverContent side="right" sideOffset={10}>
+          <PopoverContent side={window.innerWidth >= 768 ? "right" : "top"} sideOffset={10}>
             <Voting
               mapRef={mapRef}
               hotspots={hotspots}
@@ -60,7 +60,7 @@ function Nav({
               src="/settingsIcon.png"
             />
           </PopoverTrigger>
-          <PopoverContent side="right" sideOffset={10}>
+          <PopoverContent side={window.innerWidth >= 768 ? "right" : "top"} sideOffset={10}>
             <AccountSettings />
           </PopoverContent>
         </Popover>
