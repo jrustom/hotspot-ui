@@ -25,7 +25,7 @@ export async function handleSignUp(
       return error;
     }
 
-    const userResponse: User = await response.json();
+    const userResponse = await response.json();
 
     // Save user info in context
     setUserData(userResponse);
@@ -59,7 +59,7 @@ export async function handleLogin(
       return error;
     }
 
-    const userResponse: User = await response.json();
+    const userResponse = await response.json();
 
     setUserData(userResponse);
     localStorage.setItem("jwt", userResponse.token);
