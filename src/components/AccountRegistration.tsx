@@ -57,7 +57,12 @@ export function Login({
       handleLogin(setUserData, values.username, values.password).then(
         (error) => {
           if (error) {
-            toast.error(error.message);
+            if (!error.message) {
+              toast.error("An error occurred while logging in. Please try again later.")
+            }
+            else {
+              toast.error(error.message);
+            }
           }
         }
       );
@@ -173,7 +178,11 @@ export function SignUp({
         values.profilePicture
       ).then((error) => {
         if (error) {
-          toast.error(error.message);
+          if (!error.message) {
+            toast.error("An error occurred while signing up. Please try again later.")
+          } else {
+            toast.error(error.message);
+          }
         }
       });
     } catch (error) {

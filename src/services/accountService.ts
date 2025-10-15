@@ -12,7 +12,7 @@ export async function handleSignUp(
 ): Promise<void | HotspotError> {
   try {
     const url = import.meta.env.VITE_BASE_URL;
-    const response = await fetch(`${url}/users`, {
+    const response = await fetch(`${url}/users/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
