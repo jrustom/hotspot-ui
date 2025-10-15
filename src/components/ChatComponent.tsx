@@ -24,6 +24,8 @@ function ChatComponent({
   const [messages, setMessages] = useState<Message[]>(Array());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const token = localStorage.getItem("jwt");
+
   const handleClick = () => {
     setChatActive(false);
   };
@@ -39,9 +41,10 @@ function ChatComponent({
 
   // make sure the behaviour is what you're looking for
   useEffect(() => {
-    const socket = new SockJS(socketURL);
+    const socket = new SockJS(`${socketURL}/?tok=${token}`);
     const client = new Client({
       webSocketFactory: () => socket,
+
       onConnect: () => {
         client.subscribe(
           `${clientPrefix}/${chatId}/${clientURL}`,
