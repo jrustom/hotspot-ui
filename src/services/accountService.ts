@@ -29,6 +29,8 @@ export async function handleSignUp(
 
     // Save user info in context
     setUserData(userResponse);
+    localStorage.setItem("jwt", userResponse.token);
+
   } catch (error) {
     return {
       message:
@@ -60,16 +62,12 @@ export async function handleLogin(
     const userResponse: User = await response.json();
 
     setUserData(userResponse);
+    localStorage.setItem("jwt", userResponse.token);
+
   } catch (error) {
     return {
       message:
         "An error occurred while trying to login, please try again later.",
     };
-    // return {
-    //   message:
-    //     error instanceof Error
-    //       ? error.message
-    //       : "An error occurred while trying to login, please try again later.",
-    // };
   }
 }

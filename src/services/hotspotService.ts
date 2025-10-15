@@ -31,16 +31,17 @@ export interface HotspotVote {
 
 export async function generateNewHotspot(
   name: string,
-  coordinates: LngLat | undefined
+  coordinates: LngLat | undefined,
 ): Promise<Hotspot | HotspotError> {
   try {
     if (!coordinates) throw new Error();
-
     const url = import.meta.env.VITE_BASE_URL;
+    const token = localStorage.getItem("jwt");
     const response = await fetch(`${url}/hotspots`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         name,
@@ -63,14 +64,16 @@ export async function generateNewHotspot(
   }
 }
 
-// for now we'll just get this specific hotspot for testing
 export async function getHotspots(): Promise<Hotspot[] | HotspotError> {
   try {
     const url = import.meta.env.VITE_BASE_URL;
+    const token = localStorage.getItem("jwt");
+
     const response = await fetch(`${url}/hotspots`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
     });
 
@@ -95,12 +98,15 @@ export async function upvoteHotspot(
 ): Promise<Hotspot | HotspotError> {
   try {
     const url = import.meta.env.VITE_BASE_URL;
+    const token = localStorage.getItem("jwt");
+
     const response = await fetch(
       `${url}/hotspots/upvotes/${hotspotID}/${userID}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
       }
     );
@@ -129,12 +135,15 @@ export async function cancelUpvoteHotspot(
 ): Promise<Hotspot | HotspotError> {
   try {
     const url = import.meta.env.VITE_BASE_URL;
+    const token = localStorage.getItem("jwt");
+
     const response = await fetch(
       `${url}/hotspots/upvotes/${hotspotID}/${userID}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
       }
     );
@@ -161,10 +170,13 @@ export async function activateHotspot(
 ): Promise<Hotspot | HotspotError> {
   try {
     const url = import.meta.env.VITE_BASE_URL;
+    const token = localStorage.getItem("jwt");
+
     const response = await fetch(`${url}/hotspots/${hotspotID}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
     });
 

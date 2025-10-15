@@ -37,19 +37,15 @@ function ChatComponent({
     scrollToBottom();
   }, [messages]);
 
-  // TODO: make sure to understand each thing going on here and
   // make sure the behaviour is what you're looking for
   useEffect(() => {
     const socket = new SockJS(socketURL);
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
-        console.log(`Connected to WebSocket for chat: ${chatId}`);
-
         client.subscribe(
           `${clientPrefix}/${chatId}/${clientURL}`,
           (message) => {
-            console.log(`Received message for chat ${chatId}:`, message.body);
             try {
               const parsedMessage = JSON.parse(message.body);
               setMessages((prev) => [...prev, parsedMessage]);
@@ -58,7 +54,6 @@ function ChatComponent({
             }
           }
         );
-        console.log(`Subscribed to: ${clientPrefix}/${chatId}/${clientURL}`);
       },
       debug: (str) => console.log(str),
     });
@@ -88,29 +83,17 @@ function ChatComponent({
   const sendMessage = () => {
     if (stompClient && input.trim()) {
       const destination = `${serverPrefix}/${chatId}/message/send`;
-      console.log(`Sending message to: ${destination}`, input);
-      console.log(input);
-      console.log(userData?.id);
 
       stompClient.publish({
         destination: destination,
-        body: JSON.stringify({ content: input, senderId: userData?.id }),
+        body: JSON.stringify({ content: input }),
       });
       setInput("");
     }
   };
 
-  // its here that we will iterate over each message, and if the sendid of that message matches the one in context, then we know its ours and we put it on the right side, otherwise it goes on the left side
-
   return (
     <>
-      {/* {messages.length <= 0 ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-            <span className="text-white">Fetching messages...</span>
-          </div>
-        </div>
-      ) :  */}
       <>
         {/* Transparent overlay to block pointer events */}
         <div
@@ -154,19 +137,17 @@ function ChatComponent({
               {messages.length > 0 ? (
                 <div className="space-y-3 flex flex-col">
                   {messages.map((msg, idx) => {
-                    const myMessage = msg.senderId == userData?.id;
+                    const myMessage = msg.senderUsername == userData?.username;
 
                     return (
                       <div
                         key={idx}
-                        className={`flex ${
-                          myMessage ? "justify-end" : "justify-start"
-                        }`}
+                        className={`flex ${myMessage ? "justify-end" : "justify-start"
+                          }`}
                       >
                         <div
-                          className={`max-w-48 px-3 py-2 bg-gray-700 bg-opacity-80 text-white rounded-lg shadow ${
-                            myMessage ? "text-right" : "text-left"
-                          }`}
+                          className={`max-w-48 px-3 py-2 bg-gray-700 bg-opacity-80 text-white rounded-lg shadow ${myMessage ? "text-right" : "text-left"
+                            }`}
                         >
                           <div className="text-xs text-gray-300 mb-1 font-medium">
                             {msg.senderUsername}

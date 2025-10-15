@@ -13,6 +13,7 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useAuth } from "@/contexts/AuthContext";
 
 function NewHotspot({
   setStatus,
@@ -28,6 +29,8 @@ function NewHotspot({
   const [hotspotName, setHotspotName] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const { userData } = useAuth();
+
   const handleCancel = () => {
     setStatus(false);
     setIsDialogOpen(false);
@@ -39,6 +42,7 @@ function NewHotspot({
       const response = await generateNewHotspot(
         hotspotName,
         mapRef.current?.getCenter()
+        userData?.token
       );
 
       const createdHotspot = response as Hotspot;

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 export interface User {
-  id: string;
   username: string;
   profilePicture: string;
   voteRecords: VoteRecords;
@@ -18,7 +17,7 @@ interface UserAuth {
 
 const AuthContext = createContext<UserAuth>({
   userData: null,
-  setUserData: () => {},
+  setUserData: () => { },
 });
 
 export function useAuth() {
@@ -31,9 +30,6 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [userData, setUserData] = useState<User | null>(null);
-
-  // will need to redefine setUserData to pass in null being a logout, and
-  // setting the locastorage accordingly
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem("userData");
